@@ -1,0 +1,4 @@
+patron de errores:
+1 - correcto
+0 - error desconocido
+2 - dato no encontrado
