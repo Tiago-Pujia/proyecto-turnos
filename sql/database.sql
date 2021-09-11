@@ -33,10 +33,10 @@ CREATE TABLE tbl_usuarios(
     foto_perfil MEDIUMBLOB,
     fecha_ultimo_ingreso DATETIME,
     fecha_creacion DATETIME,
-    fecha_alta DATETIME DEFAULT NOW()
+    fecha_confirmacion DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
 
-CREATE TABLE tbl_predios(
+CREATE TABLE tbl_predios_sin_confirmar(
     id_predio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(400) NOT NULL,
     email VARCHAR(200) UNIQUE NOT NULL,
@@ -44,22 +44,32 @@ CREATE TABLE tbl_predios(
     descripcion VARCHAR(2000),
     localidad VARCHAR(200) NOT NULL,
     direccion VARCHAR(1000) NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT NOW()
+) ENGINE = InnoDB;
+
+CREATE TABLE tbl_predios(
+    id_predio INT UNSIGNED PRIMARY KEY,
+    nombre VARCHAR(400) NOT NULL,
+    email VARCHAR(200) UNIQUE NOT NULL,
+    password VARCHAR(500) NOT NULL,
+    descripcion VARCHAR(10000),
+    localidad VARCHAR(200) NOT NULL,
+    direccion VARCHAR(1000) NOT NULL,
     foto_logo MEDIUMBLOB,
     vistas INT DEFAULT 0,
-    email_confirmado BIT DEFAULT 0,
-    fecha_creacion DATETIME NOT NULL DEFAULT NOW()
+    fecha_creacion DATETIME NOT NULL,
+    fecha_confirmacion DATETIME NOT NULL DEFAULT NOW()
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_predios_anuncios(
     id_anuncio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_predio INT UNSIGNED NOT NULL,
-    titulo VARCHAR(100) NOT NULL,
+    titulo VARCHAR(200) NOT NULL,
     descripcion VARCHAR(10000),
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
 
-    FOREIGN KEY (id_predio) REFERENCES tbl_predios(id_predio)
+    FOREIGN KEY (id_predio) REFERENCES tbl_predios(id_predio) ON DELETE CASCADE
 ) ENGINE = InnoDB;
-
 
 CREATE TABLE tbl_predio_comentarios (
     id_comentario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +90,7 @@ CREATE TABLE tbl_actividades(
     telefono VARCHAR(100),
     usuarios_maximos_x_turno SMALLINT UNSIGNED NOT NULL,
     -- precio INT UNSIGNED,
-    descripcion VARCHAR(2000),
+    descripcion VARCHAR(10000),
     vistas INT DEFAULT 0,
     foto_actividad MEDIUMBLOB,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
@@ -89,6 +99,7 @@ CREATE TABLE tbl_actividades(
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_actividades_administradores(
+    id_administrador INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT UNSIGNED NOT NULL,
     id_predio INT UNSIGNED NOT NULL,
     id_actividad INT UNSIGNED NOT NULL,
@@ -102,11 +113,11 @@ CREATE TABLE tbl_actividades_administradores(
 CREATE TABLE tbl_actividades_anuncios(
     id_anuncio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_actividad INT UNSIGNED NOT NULL,
-    titulo VARCHAR(100) NOT NULL,
+    titulo VARCHAR(200) NOT NULL,
     descripcion VARCHAR(10000),
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
 
-    FOREIGN KEY (id_actividad) REFERENCES tbl_actividades(id_actividad)
+    FOREIGN KEY (id_actividad) REFERENCES tbl_actividades(id_actividad) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_actividades_comentarios (
@@ -139,6 +150,7 @@ CREATE TABLE tbl_actividades_horarios_semanales(
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_actividades_dias_cerrados_temporalmente(
+    id_dia INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_actividad INT UNSIGNED NOT NULL,
     fecha DATE NOT NULL,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
@@ -152,6 +164,7 @@ CREATE TABLE tbl_turnos(
     id_predio INT UNSIGNED NOT NULL,
     id_actividad INT UNSIGNED NOT NULL,
     id_horario INT UNSIGNED NOT NULL,
+    fecha DATE NOT NULL,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
 
     FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario) ON DELETE CASCADE,
@@ -159,6 +172,10 @@ CREATE TABLE tbl_turnos(
     FOREIGN KEY (id_actividad) REFERENCES tbl_actividades(id_predio) ON DELETE CASCADE,
     FOREIGN KEY (id_horario) REFERENCES tbl_actividades_horarios_semanales(id_horario) ON DELETE CASCADE
 ) ENGINE = InnoDB;
+
+-- CREATE TABLE tbl_turnos_finalizados LIKE tbl_turnos;
+
+-- CREATE TABLE tbl_turnos_realizados LIKE tbl_turnos;
 
 -- CREATE TABLE tbl_general (
 --     agrupador VARCHAR(500) NOT NULL,
@@ -169,14 +186,24 @@ CREATE TABLE tbl_turnos(
 INSERT INTO
     tbl_nombres_dias (dia)
 VALUES
-    ('lunes'),
-    ('martes'),
-    ('miercoles'),
-    ('jueves'),
-    ('viernes'),
-    ('sabado'),
-    ('domingo');
+    ('Monday'),
+    ('Tuesday'),
+    ('Wednesday'),
+    ('Thursday'),
+    ('Friday'),
+    ('Saturday'),
+    ('Sunday');
 
+
+-- =========================================================================================================
+
+CREATE TABLE tbl_sugerencias (
+    id_usuario INT UNSIGNED,
+    mensaje VARCHAR(10000),
+    fecha_creacion DATETIME DEFAULT now()
+) ENGINE = InnoDB;
+
+-- =========================================================================================================
 
 CREATE TABLE tbl_baja_usuarios(
     id_usuario INT UNSIGNED PRIMARY KEY,
@@ -186,8 +213,8 @@ CREATE TABLE tbl_baja_usuarios(
     sexo ENUM('H', 'M'),
     email VARCHAR(200) NOT NULL,
     password VARCHAR(500) NOT NULL,
-    email_confirmado BIT,
     fecha_creacion DATETIME,
+    fecha_confirmacion DATETIME,
     fecha_baja DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
 
@@ -199,8 +226,8 @@ CREATE TABLE tbl_baja_predios(
     descripcion VARCHAR(2000),
     localidad VARCHAR(200) NOT NULL,
     direccion VARCHAR(1000) NOT NULL,
-    email_confirmado BIT DEFAULT 0,
     fecha_creacion DATETIME,
+    fecha_confirmacion DATETIME NOT NULL DEFAULT NOW(),
     fecha_baja DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
 
@@ -212,22 +239,44 @@ CREATE TABLE tbl_baja_actividades(
     usuarios_maximos_x_turno SMALLINT UNSIGNED NOT NULL,
     -- precio INT UNSIGNED,
     descripcion VARCHAR(2000),
+    vistas INT DEFAULT 0,
     fecha_creacion DATETIME,
     fecha_baja DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
 
-CREATE TABLE tbl_baja_turnos (
-    id_turno INT UNSIGNED PRIMARY KEY,
+CREATE TABLE tbl_baja_turnos LIKE tbl_turnos;
+ALTER TABLE tbl_baja_turnos ADD fecha_baja DATETIME DEFAULT NOW();
+
+-- =========================================================================================================
+
+CREATE TABLE tbl_historial_usuarios (
     id_usuario INT UNSIGNED NOT NULL,
-    id_predio INT UNSIGNED NOT NULL,
-    id_actividad INT UNSIGNED NOT NULL,
-    id_horario INT UNSIGNED NOT NULL,
-    fecha_creacion DATETIME,
-    fecha_baja DATETIME DEFAULT NOW()
+    nombre VARCHAR(200),
+    apellido VARCHAR(100),
+    fecha_nacimiento DATE,
+    sexo ENUM('H', 'M'),
+    email VARCHAR(200),
+    password VARCHAR(500),
+    fecha_cambio DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
 
-CREATE TABLE tbl_sugerencias (
-    id_usuario INT UNSIGNED,
-    mensaje VARCHAR(10000),
-    fecha_creacion DATETIME DEFAULT now()
+CREATE TABLE tbl_historial_predios (
+    id_predio INT UNSIGNED NOT NULL,
+    nombre VARCHAR(400),
+    email VARCHAR(200),
+    password VARCHAR(500),
+    descripcion VARCHAR(10000),
+    localidad VARCHAR(200),
+    direccion VARCHAR(1000),
+    fecha_cambio DATETIME DEFAULT NOW()
+) ENGINE = InnoDB;
+
+CREATE TABLE tbl_historial_actividades (
+    id_actividad INT UNSIGNED NOT NULL,
+    id_predio INT UNSIGNED,
+    nombre_actividad VARCHAR(200),
+    usuarios_maximos_x_turno SMALLINT UNSIGNED,
+    precio INT UNSIGNED,
+    descripcion VARCHAR(2000),
+    fecha_cambio DATETIME DEFAULT NOW()
 ) ENGINE = InnoDB;
