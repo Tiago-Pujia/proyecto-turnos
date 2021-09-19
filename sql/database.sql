@@ -143,7 +143,7 @@ CREATE TABLE tbl_actividades_dias_cerrados_temporalmente(
     FOREIGN KEY (id_actividad) REFERENCES tbl_actividades(id_actividad) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-CREATE TABLE tbl_administradores(
+CREATE TABLE tbl_administradores_x_predio(
     id_administrador INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT UNSIGNED NOT NULL,
     id_predio INT UNSIGNED NOT NULL,
@@ -252,8 +252,8 @@ SELECT * FROM tbl_actividades WHERE fecha_baja IS NULL;
 CREATE VIEW vw_tbl_turnos_activos AS
 SELECT * FROM tbl_turnos WHERE fecha_baja IS NULL;
 
-CREATE VIEW vw_tbl_administradores_activos AS
-SELECT * FROM tbl_administradores WHERE fecha_baja IS NULL;
+CREATE VIEW vw_tbl_administradores_x_predio_activos AS
+SELECT * FROM tbl_administradores_x_predio WHERE fecha_baja IS NULL;
 
 -- =========================================================================================================
 -- DATOS DDL

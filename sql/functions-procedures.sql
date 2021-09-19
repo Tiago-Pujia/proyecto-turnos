@@ -27,14 +27,14 @@ BEGIN
     DECLARE campo_id INT UNSIGNED;
     DECLARE cursor_listo BIT DEFAULT 0;
     DECLARE cursor_1 CURSOR FOR
-        SELECT id_usuario FROM tbl_administradores WHERE id_actividad = id_actividad;
+        SELECT id_usuario FROM tbl_administradores_x_predio WHERE id_actividad = id_actividad;
     DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET cursor_listo = 1;
 
     START TRANSACTION;
 
         UPDATE tbl_turnos SET fecha_baja = now() WHERE tbl_turnos.id_actividad = id_actividad;
         UPDATE tbl_actividades SET fecha_baja = now() WHERE tbl_actividades.id_actividad = id_actividad;
-        UPDATE tbl_administradores SET fecha_baja = now() WHERE tbl_administradores.id_actividad = id_actividad;
+        UPDATE tbl_administradores_x_predio SET fecha_baja = now() WHERE tbl_administradores_x_predio.id_actividad = id_actividad;
 
         OPEN cursor_1;
             ciclo_1: LOOP
@@ -45,7 +45,7 @@ BEGIN
 
                 IF(
                     (SELECT id_predio FROM tbl_predios WHERE id_predio.id_propietario = campo_id AND fecha_baja IS NOT NULL)IS NULL OR
-                    (SELECT id_administrador FROM tbl_administradores WHERE id_administrador.id_usuario = campo_id AND fecha_baja IS NOT NULL)IS NULL
+                    (SELECT id_administrador FROM tbl_administradores_x_predio WHERE id_administrador.id_usuario = campo_id AND fecha_baja IS NOT NULL)IS NULL
                 ) THEN
                     UPDATE tbl_usuarios SET id_rol = 1 WHERE id_usuario = campo_id;
                 END IF;
@@ -62,14 +62,14 @@ BEGIN
     DECLARE campo_id INT UNSIGNED;
     DECLARE cursor_listo BIT DEFAULT 0;
     DECLARE cursor_1 CURSOR FOR
-        SELECT id_usuario FROM tbl_administradores WHERE tbl_administradores.id_predio = id_predio;
+        SELECT id_usuario FROM tbl_administradores_x_predio WHERE tbl_administradores_x_predio.id_predio = id_predio;
     DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET cursor_listo = 1;
 
     START TRANSACTION;
         UPDATE tbl_turnos SET fecha_baja = now() WHERE tbl_turnos.id_predio = id_predio;
         UPDATE tbl_actividades SET fecha_baja = now() WHERE tbl_actividades.id_predio = id_predio;
         UPDATE tbl_predios SET fecha_baja = now() WHERE tbl_predios.id_predio = id_predio;
-        UPDATE tbl_administradores SET fecha_baja = now() WHERE tbl_administradores.id_predio = id_predio;
+        UPDATE tbl_administradores_x_predio SET fecha_baja = now() WHERE tbl_administradores_x_predio.id_predio = id_predio;
 
         
         OPEN cursor_1;
@@ -81,7 +81,7 @@ BEGIN
 
                 IF(
                     (SELECT id_predio FROM tbl_predios WHERE tbl_predios.id_propietario = campo_id AND fecha_baja IS NOT NULL)IS NULL OR
-                    (SELECT id_administrador FROM tbl_administradores WHERE tbl_administradores.id_usuario = campo_id AND fecha_baja IS NOT NULL)IS NULL
+                    (SELECT id_administrador FROM tbl_administradores_x_predio WHERE tbl_administradores_x_predio.id_usuario = campo_id AND fecha_baja IS NOT NULL)IS NULL
                 ) THEN
                     UPDATE tbl_usuarios SET id_rol = 1 WHERE tbl_usuarios.id_usuario = campo_id;
                 END IF;
@@ -96,7 +96,7 @@ BEGIN
     DECLARE campo_predio INT UNSIGNED;
     DECLARE cursor_listo BIT DEFAULT 0;
     DECLARE cursor_1 CURSOR FOR
-        SELECT id_usuario FROM tbl_administradores WHERE tbl_administradores.id_predio = id_predio;
+        SELECT id_usuario FROM tbl_administradores_x_predio WHERE tbl_administradores_x_predio.id_predio = id_predio;
     DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET cursor_listo = 1;
 
     -- baja_predio
@@ -104,7 +104,7 @@ BEGIN
     START TRANSACTION;
         UPDATE tbl_turnos SET fecha_baja = now() WHERE id_usuario = id_usuario;
         UPDATE tbl_usuarios SET fecha_baja = now() WHERE id_usuario = id_usuario;
-        UPDATE tbl_administradores SET fecha_baja = now() WHERE id_usuario = id_usuario;
+        UPDATE tbl_administradores_x_predio SET fecha_baja = now() WHERE id_usuario = id_usuario;
 
         OPEN cursor_1;
             ciclo_1: LOOP
@@ -124,10 +124,10 @@ END//
 CREATE PROCEDURE baja_administrador (id_administrador INT)
 BEGIN
     DECLARE id_usuario INT UNSIGNED;
-    SET id_usuario = (SELECT id_usuario FROM tbl_administradores WHERE id_administrador = id_administrador);
+    SET id_usuario = (SELECT id_usuario FROM tbl_administradores_x_predio WHERE id_administrador = id_administrador);
 
     UPDATE
-        tbl_administradores
+        tbl_administradores_x_predio
     SET 
         fecha_baja = now()
     WHERE
@@ -135,7 +135,7 @@ BEGIN
 
     IF(
         (SELECT id_predio FROM tbl_predios WHERE tbl_predios.id_propietario = id_usuario AND fecha_baja IS NOT NULL)IS NULL OR
-        (SELECT id_administrador FROM tbl_administradores WHERE tbl_administradores.id_usuario = id_usuario AND fecha_baja IS NOT NULL)IS NULL
+        (SELECT id_administrador FROM tbl_administradores_x_predio WHERE tbl_administradores_x_predio.id_usuario = id_usuario AND fecha_baja IS NOT NULL)IS NULL
     ) THEN
         UPDATE tbl_usuarios SET id_rol = 2 WHERE tbl_usuarios.id_usuario = id_usuario;
     END IF;
@@ -219,7 +219,7 @@ CREATE FUNCTION insertar_administrador(id_usuario INT,id_predio INT,id_actividad
 RETURNS VARCHAR(100)
 BEGIN
     INSERT INTO
-        tbl_administradores (id_usuario,id_predio,id_actividad)
+        tbl_administradores_x_predio (id_usuario,id_predio,id_actividad)
     VALUES
         (
             id_usuario,
@@ -374,7 +374,7 @@ END//
 
 CREATE PROCEDURE activacion_administrador_de_baja(id_administrador INT)
 BEGIN
-    UPDATE tbl_administradores SET fecha_baja = null WHERE id_administrador = id_administrador;
+    UPDATE tbl_administradores_x_predio SET fecha_baja = null WHERE id_administrador = id_administrador;
 END//
 
 CREATE FUNCTION validar_email (email VARCHAR(200))
@@ -389,5 +389,19 @@ BEGIN
     END IF;
 
     RETURN '1';
+END//
+
+CREATE PROCEDURE insert_log (tabla VARCHAR(100),campo_modificado VARCHAR(100),id INT,valor_nuevo VARCHAR(10000),valor_viejo VARCHAR(10000))
+BEGIN
+    INSERT INTO 
+        tbl_logs (tabla,campo_modificado,id,valor_nuevo,valor_viejo) 
+    VALUES 
+        (
+            tabla,
+            campo_modificado,
+            id,
+            valor_nuevo,
+            valor_viejo
+        );
 END//
 DELIMITER ;
