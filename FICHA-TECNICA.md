@@ -113,6 +113,11 @@ El archivo "functions-procedures.sql" contiene al inicio un indice de los actos 
 >
 
 > **Funciones Extra:**
->> ***validar_email(email)***
+>> ***validar_email(email VARCHAR(200))***
 >> Validamos un correo antes de insertarse
+>
+>> ***insert_log(tabla VARCHAR(100),campo_modificado VARCHAR(100),id INT,valor_nuevo VARCHAR(10000),valor_viejo VARCHAR(10000))***
+>>
+>> Insertamos un registro log a la tabla de logs
+>> Utilizado para los triggers
 >

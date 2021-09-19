@@ -6,258 +6,225 @@ UPDATE
 ON tbl_usuarios 
 FOR EACH ROW 
 BEGIN
-    set
-        @nombre = NULL,
-        @apellido = NULL,
-        @fecha_nacimiento = NULL,
-        @sexo = NULL,
-        @email = NULL,
-        @password = NULL;
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_usuarios';
+    DECLARE id_registro INT UNSIGNED;
+
+    SET id_registro = (OLD.id_usuario);
 
     IF (NEW.nombre != OLD.nombre) THEN
-        SET @nombre = NEW.nombre;
+        CALL insert_log(tabla,'nombre',id_registro,NEW.nombre,OLD.nombre);
     END IF;
 
     IF (NEW.apellido != OLD.apellido) THEN
-        SET @apellido = NEW.apellido;
+        CALL insert_log(tabla,'apellido',id_registro,NEW.apellido,OLD.apellido);
     END IF;
 
     IF (NEW.fecha_nacimiento != OLD.fecha_nacimiento) THEN
-        SET @fecha_nacimiento = NEW.fecha_nacimiento;
+        CALL insert_log(tabla,'fecha_nacimiento',id_registro,NEW.fecha_nacimiento,OLD.fecha_nacimiento);
     END IF;
 
     IF (NEW.sexo != OLD.sexo) THEN
-        SET @sexo = NEW.sexo;
+        CALL insert_log(tabla,'sexo',id_registro,NEW.sexo,OLD.sexo);
     END IF;
 
     IF (NEW.email != OLD.email) THEN
-        SET @email = NEW.email;
+        CALL insert_log(tabla,'email',id_registro,NEW.email,OLD.email);
     END IF;
 
     IF (NEW.password != OLD.password) THEN
-        SET @password = NEW.password;
+        CALL insert_log(tabla,'password',id_registro,NEW.password,OLD.password);
     END IF;
 
-    INSERT INTO
-        tbl_historial_usuarios (
-            id_usuario,
-            nombre,
-            apellido,
-            fecha_nacimiento,
-            email,
-            password
-        )
-    VALUES
-        (
-            OLD.id_usuario,
-            @nombre,
-            @apellido,
-            @fecha_nacimiento,
-            @email,
-            @password
-        );
-END// 
+    IF (NEW.id_rol != OLD.id_rol) THEN
+        CALL insert_log(tabla,'id_rol',id_registro,NEW.id_rol,OLD.id_rol);
+    END IF;
+
+    IF (NEW.fecha_confirmacion != OLD.fecha_confirmacion) THEN
+        CALL insert_log(tabla,'fecha_confirmacion',id_registro,NEW.fecha_confirmacion,OLD.fecha_confirmacion);
+    END IF;
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
+END//
 
 CREATE TRIGGER after_cambios_predios
 AFTER
 UPDATE
-ON tbl_predios 
+ON tbl_predios
 FOR EACH ROW 
 BEGIN
-    set
-        @nombre = NULL,
-        @email = NULL,
-        @password = NULL,
-        @descripcion = NULL,
-        @localidad = NULL,
-        @direccion = NULL;
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_predios';
+    DECLARE id_registro INT UNSIGNED;
 
+    SET id_registro = (OLD.id_predio);
+
+    IF (NEW.id_propietario != OLD.id_propietario) THEN
+        CALL insert_log(tabla,'id_propietario',id_registro,NEW.id_propietario,OLD.id_propietario);
+    END IF;
     IF (NEW.nombre != OLD.nombre) THEN
-        SET @nombre = NEW.nombre;
+        CALL insert_log(tabla,'nombre',id_registro,NEW.nombre,OLD.nombre);
     END IF;
-
     IF (NEW.email != OLD.email) THEN
-        SET @email = NEW.email;
+        CALL insert_log(tabla,'email',id_registro,NEW.email,OLD.email);
     END IF;
-
+    IF (NEW.telefono != OLD.telefono) THEN
+        CALL insert_log(tabla,'telefono',id_registro,NEW.telefono,OLD.telefono);
+    END IF;
     IF (NEW.descripcion != OLD.descripcion) THEN
-        SET @descripcion = NEW.descripcion;
+        CALL insert_log(tabla,'descripcion',id_registro,NEW.descripcion,OLD.descripcion);
     END IF;
-
+    IF (NEW.provincia != OLD.provincia) THEN
+        CALL insert_log(tabla,'provincia',id_registro,NEW.provincia,OLD.provincia);
+    END IF;
     IF (NEW.localidad != OLD.localidad) THEN
-        SET @password = NEW.localidad;
+        CALL insert_log(tabla,'localidad',id_registro,NEW.localidad,OLD.localidad);
     END IF;
-
     IF (NEW.direccion != OLD.direccion) THEN
-        SET @password = NEW.direccion;
+        CALL insert_log(tabla,'direccion',id_registro,NEW.direccion,OLD.direccion);
     END IF;
-
-    INSERT INTO
-        tbl_historial_predios (
-            id_predio,
-            nombre,
-            email,
-            password,
-            descripcion,
-            localidad,
-            direccion
-        )
-    VALUES
-        (
-            OLD.id_predio,
-            @nombre,
-            @email,
-            @password,
-            @descripcion,
-            @localidad,
-            @direccion
-        );
-END// 
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
+END//
 
 CREATE TRIGGER after_cambios_actividades
 AFTER
 UPDATE
-ON tbl_actividades 
+ON tbl_actividades
 FOR EACH ROW 
 BEGIN
-    set
-        @id_predio = NULL,
-        @nombre_actividad = NULL,
-        @telefono = NULL,
-        @usuarios_maximos_x_turno = NULL,
-        @descripcion = NULL;
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_actividades';
+    DECLARE id_registro INT UNSIGNED;
 
-    IF (NEW.id_predio != OLD.id_predio) THEN
-        SET @id_predio = NEW.id_predio;
-    END IF;
+    SET id_registro = (OLD.id_actividad);
 
     IF (NEW.nombre_actividad != OLD.nombre_actividad) THEN
-        SET @nombre_actividad = NEW.nombre_actividad;
+        CALL insert_log(tabla,'nombre_actividad',id_registro,NEW.nombre_actividad,OLD.nombre_actividad);
     END IF;
-
     IF (NEW.telefono != OLD.telefono) THEN
-        SET @telefono = NEW.telefono;
+        CALL insert_log(tabla,'telefono',id_registro,NEW.telefono,OLD.telefono);
     END IF;
-
     IF (NEW.usuarios_maximos_x_turno != OLD.usuarios_maximos_x_turno) THEN
-        SET @usuarios_maximos_x_turno = NEW.usuarios_maximos_x_turno;
+        CALL insert_log(tabla,'usuarios_maximos_x_turno',id_registro,NEW.usuarios_maximos_x_turno,OLD.usuarios_maximos_x_turno);
     END IF;
-
-    -- IF (NEW.precio != OLD.precio) THEN
-    --     SET @precio = NEW.precio;
-    -- END IF;
-
     IF (NEW.descripcion != OLD.descripcion) THEN
-        SET @descripcion = NEW.descripcion;
+        CALL insert_log(tabla,'descripcion',id_registro,NEW.descripcion,OLD.descripcion);
     END IF;
-
-    INSERT INTO
-        tbl_historial_actividades (
-            id_predio,
-            nombre_actividad,
-            telefono,
-            usuarios_maximos_x_turno,
-            precio,
-            descripcion
-        )
-    VALUES
-        (
-            OLD.id_actividad,
-            @id_predio,
-            @nombre_actividad,
-            @telefono,
-            @usuarios_maximos_x_turno,
-            @precio,
-            @descripcion
-        );
-END// 
-
-CREATE TRIGGER after_delete_turnos
-AFTER
-DELETE
-ON tbl_turnos
-FOR EACH ROW
-BEGIN
-    INSERT INTO 
-        tbl_baja_turnos
-    VALUES
-        (
-            old.id_turno,
-            old.id_usuario,
-            old.id_predio,
-            old.id_actividad,
-            old.id_horario,
-            old.fecha,
-            old.fecha_creacion,
-            now()
-        );
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
 END//
 
-CREATE TRIGGER after_delete_usuarios
+CREATE TRIGGER after_cambios_actividades_horarios_semanales 
 AFTER
-DELETE
+UPDATE
+ON tbl_actividades_horarios_semanales
+FOR EACH ROW 
+BEGIN
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_actividades_horarios_semanales';
+    DECLARE id_registro INT UNSIGNED;
+
+    SET id_registro = (OLD.id_horario);
+
+    IF (NEW.dia != OLD.dia) THEN
+        CALL insert_log(tabla,'dia',id_registro,NEW.dia,OLD.dia);
+    END IF;
+    IF (NEW.precio != OLD.precio) THEN
+        CALL insert_log(tabla,'precio',id_registro,NEW.precio,OLD.precio);
+    END IF;
+    IF (NEW.hora_comienzo != OLD.hora_comienzo) THEN
+        CALL insert_log(tabla,'hora_comienzo',id_registro,NEW.hora_comienzo,OLD.hora_comienzo);
+    END IF;
+    IF (NEW.hora_finalizacion != OLD.hora_finalizacion) THEN
+        CALL insert_log(tabla,'hora_finalizacion',id_registro,NEW.hora_finalizacion,OLD.hora_finalizacion);
+    END IF;
+END//
+
+CREATE TRIGGER after_cambios_administradores_x_predio
+AFTER
+UPDATE
+ON tbl_administradores_x_predio 
+FOR EACH ROW 
+BEGIN
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_administradores_x_predio';
+    DECLARE id_registro INT UNSIGNED;
+
+    SET id_registro = (OLD.id_administrador);
+
+    IF (NEW.id_actividad != OLD.id_actividad) THEN
+        CALL insert_log(tabla,'id_actividad',id_registro,NEW.id_actividad,OLD.id_actividad);
+    END IF;
+
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
+END//
+
+/*
+Plantilla:
+CREATE TRIGGER after_cambios_ -- Especificar 
+AFTER
+UPDATE
+ON -- Especificar 
+FOR EACH ROW 
+BEGIN
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_usuarios';
+    DECLARE id_registro INT UNSIGNED;
+
+    SET id_registro = (OLD.id_registro);
+
+    IF (NEW.nombre != OLD.nombre) THEN
+        CALL insert_log(tabla,'nombre',id_registro,NEW.nombre,OLD.nombre);
+    END IF;
+
+END//
+*/
+
+*/
+/*
+Idea que deberia de completarse:
+
+CREATE TRIGGER after_cambios_usuarios
+AFTER
+UPDATE
 ON tbl_usuarios
 FOR EACH ROW
 BEGIN
-    INSERT INTO 
-        tbl_baja_usuarios
-    VALUES
-        (
-            old.id_usuario,
-            old.nombre,
-            old.apellido,
-            old.fecha_nacimiento,
-            old.sexo,
-            old.email,
-            old.password,
-            old.fecha_creacion,
-            old.fecha_confirmacion,
-            now()
-        );
-END//
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_usuarios';
+    DECLARE campo_id VARCHAR(100);
+    DECLARE campo_tabla VARCHAR(100);
+    DECLARE cursor_listo BIT DEFAULT 0;
+    DECLARE cursor_1 CURSOR FOR
+        SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = 'db_turnos' AND TABLE_NAME = tabla;
+    DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET cursor_listo = 1;
 
-CREATE TRIGGER after_delete_actividades
-AFTER
-DELETE
-ON tbl_actividades
-FOR EACH ROW
-BEGIN
-    INSERT INTO
-        tbl_baja_actividades
-    VALUES
-        (
-            OLD.id_actividad,
-            OLD.id_predio,
-            OLD.nombre_actividad,
-            OLD.telefono,
-            OLD.usuarios_maximos_x_turno,
-            OLD.descripcion,
-            OLD.vistas,
-            OLD.fecha_creacion,
-            now()
-        );
-END//
+    SET campo_id = (SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = 'db_turnos' AND TABLE_NAME = tabla AND COLUMN_KEY = 'PRI');
 
-CREATE TRIGGER after_delete_predio
-AFTER
-DELETE
-ON tbl_predios
-FOR EACH ROW
-BEGIN
-    INSERT INTO
-        tbl_baja_predios
-    VALUES
-        (
-            OLD.id_predio,
-            OLD.nombre,
-            OLD.email,
-            OLD.password,
-            OLD.descripcion,
-            OLD.localidad,
-            OLD.direccion,
-            OLD.fecha_creacion,
-            OLD.fecha_confirmacion,
-            now()
-        );
+    OPEN cursor_1;
+        ciclo_1: LOOP
+            FETCH cursor_1 INTO campo_tabla;
+            IF (cursor_listo = 1) THEN 
+                LEAVE ciclo_1;
+            END IF;
+
+            SET @new_campo = NEW.campo_tabla,
+                @old_campo = OLD.campo_tabla,
+                @id = OLD.campo_id;
+
+            IF (@new_campo != @old_campo) THEN
+                INSERT INTO
+                    tbl_logs (tabla, campo_modificado, id, valor_nuevo, valor_viejo) 
+                VALUES 
+                    (
+                        tabla,
+                        campo_tabla,
+                        @id,
+                        @new_campo,
+                        @old_campo
+                    );
+            END IF;
+        END LOOP ciclo_1;
+    CLOSE cursor_1;
 END//
+*/
 DELIMITER ;
