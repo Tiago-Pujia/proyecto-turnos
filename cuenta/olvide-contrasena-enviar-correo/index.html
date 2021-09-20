@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olvide la Contraseña</title>
+</head>
+<body>
+    <script src="/independencias/jquery.js"></script>
+    <script src="/independencias/jquery-cookie.js"></script>
+    <link rel="stylesheet" href="/independencias/normalize.css" />
+
+    <link rel="stylesheet" href="../styles.css"/>
+
+    <script src="index.js" defer="true"></script>
+</body>
+    <main>
+        <form id="formLogin">
+            <h1>Olvide la Contraseña</h1>
+            <p class="mensaje"></p>
+
+            <fieldset>
+                <label for="email">Correo Electronico:</label>
+                <input type="text" id="email" name="email">
+            </fieldset>
+
+            <input type="submit" value="Enviar">
+        </form>
+    </main>
+</html>

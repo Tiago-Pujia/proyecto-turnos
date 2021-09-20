@@ -2,9 +2,11 @@
 
 Se esta utilizando el DBMS MySQL.
 El unico orden de la ejecucion de archivos SQL es primero "database.sql" y el resto no necesita un orden.
-El archivo "functions-procedures.sql" contiene al inicio un indice de los actos que pueden hacerse en la BD.
+Hacemos uso del usuario "USER_DML" con la contraseña "rivadavia" para el servidor.
 
 ## Funciones y Procesos Almacenados Disponibles para Interactuar con la BD
+
+A continuación se mostrara las funciones y procesos almacenados que podemos ejecutar en la base de datos:
 
 > **Inserción de datos primarios:** 
 >
@@ -121,3 +123,7 @@ El archivo "functions-procedures.sql" contiene al inicio un indice de los actos 
 >> Insertamos un registro log a la tabla de logs
 >> Utilizado para los triggers
 >
+
+# PHP composer
+
+Se esta utilizando el gestor de independencias "composer", el archivo de ejecucion se encuentra en la ruta "api/composer/composer.json", debe ser ejecutado en esa misma carpeta
