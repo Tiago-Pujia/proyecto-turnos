@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registrarte</title>
+
+        <script src="/independencias/jquery.js"></script>
+        <script src="/independencias/jquery-cookie.js"></script>
+        <link rel="stylesheet" href="/independencias/normalize.css" />
+    
+        <link rel="stylesheet" href="../styles.css" />
+
+        <script defer="true" src="index.js"></script>
+    </head>
+    <body>
+        <main>
+            <form id="formLogin" action="#">
+                <h1>Registrarte</h1>
+                <p class="mensaje"></p>
+
+                <fieldset>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" />
+                </fieldset>
+
+                <fieldset>
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" id="apellido" name="apellido">
+                </fieldset>
+
+                <fieldset>
+                    <span style="display: block">Sexo:</span>
+                    <div>
+                        <input type="radio" name="sexo" id="masculino" value="0" checked/>
+                        <label for="masculino">Hombre</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="sexo" id="femenino" value="1"/>
+                        <label for="femenino">Mujer</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <label for="email">Correo Electronico:</label>
+                    <input type="text" id="email" name="email" />
+                </fieldset>
+
+                <fieldset>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" />
+                </fieldset>
+
+                <fieldset>
+                    <label for="password_confirmado">Confirmar Contraseña:</label>
+                    <input type="password" id="password_confirmado" name="password_confirmado">
+                </fieldset>    
+
+                <fieldset>
+                    <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" />
+                </fieldset>
+
+                <input type="submit" value="Registrarte" />
+            </form>
+            <aside>
+                <p><a href="/cuenta/iniciar-sesion/">Iniciar Sesion</a></p>
+                <p><a href="/home/">Volver a Inicio</a></p>    
+            </aside>
+        </main>
+    </body>
+</html>

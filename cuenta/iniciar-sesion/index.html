@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Iniciar Sesion</title>
+
+        <script src="/independencias/jquery.js"></script>
+        <script src="/independencias/jquery-cookie.js"></script>
+        <link rel="stylesheet" href="/independencias/normalize.css" />
+
+        <link rel="stylesheet" href="../styles.css"/>
+
+        <script defer="true" src="index.js"></script>
+        <script defer="true" src="bloqueo.js"></script>
+    </head>
+    <body>
+        <main>
+            <form id="formLogin" action="#">
+                <h1>Iniciar Sesion</h1>
+                <p class="mensaje"></p>
+
+                <fieldset>
+                    <label for="email">Correo Electronico:</label>
+                    <input type="text" id="email" name="email" />
+                </fieldset>
+
+                <fieldset>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" />
+                </fieldset>
+
+                <input type="submit" value="Iniciar Sesion" />
+            </form>
+            <aside>
+                <p><a href="/cuenta/registrarte-usuario/">Crear una cuenta</a></p>
+                <p><a href="/cuenta/olvide-contrasena-enviar-correo/">Olvide la contraseña</a></p>
+            </aside>
+        </main>
+
+
+    </body>
+</html>

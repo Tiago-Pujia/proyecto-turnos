@@ -2,3 +2,8 @@
 /sql/tablas.php
 /sql/ejecutar.sql
 /sql/data-test.sql
+
+/api/composer/vendor
+/api/composer/composer.lock
+
+/RESOLVER.md

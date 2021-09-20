@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olvide Contraseña</title>
+
+    <script src="/independencias/jquery.js"></script>
+    <script src="/independencias/jquery-cookie.js"></script>
+    <link rel="stylesheet" href="/independencias/normalize.css" />
+
+    <link rel="stylesheet" href="../styles.css"/>
+
+    <script src="index.js" defer="true"></script>
+</head>
+<body>
+    <main>
+        <form id="formLogin">
+            <h1>Olvide la Contraseña</h1>
+            <p class="mensaje"></p>
+
+            <fieldset>
+                <label for="password">Nueva Contraseña:</label>
+                <input type="password" id="password" name="password">
+            </fieldset>
+
+            <fieldset>
+                <label for="password_confirmado">Confirmar Contraseña:</label>
+                <input type="password" id="password_confirmado" name="password_confirmado">
+            </fieldset>
+            
+            <input type="submit" value="Cambiar Contraseña">
+        </form>    
+    </main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main{
+    height: 100vh;
+    display: grid;
+    grid-template-rows: min-content auto;   
+    grid-template-columns: minmax(200px,500px);
+    justify-content: center;
+}
+
+
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+#formLogin {
+    padding: 10px;
+    margin: 0;
+}
+
+@media screen and (min-width:481px){
+    #formLogin {
+        border: 1px solid #000;
+        margin-top: 50px;
+    }
+}
+
+#formLogin fieldset {
+    display: flex;
+    flex-direction: column;
+}
+
+#formLogin label{
+    font-size: 1.2em;
+}
+
+#formLogin input[type="submit"] {
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+.error_campo {
+    color: #ff0000;
+}
+
+aside{
+    padding: 10px;
+}
+
+.login{
+    text-align: center;
+}

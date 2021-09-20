@@ -381,10 +381,10 @@ CREATE FUNCTION validar_email (email VARCHAR(200))
 RETURNS VARCHAR(200)
 BEGIN
     IF ((SELECT id_usuario FROM tbl_usuarios WHERE tbl_usuarios.email = email AND fecha_baja IS NOT NULL LIMIT 1) IS NOT NULL) THEN
-        RETURN '{"mensaje":"Diste de baja tu cuenta, revisa tu correo para volverla a activar","campo":"email","r":2}';
+        RETURN 'Diste de baja tu cuenta, revisa tu correo para volverla a activar';
 
     ELSEIF ((SELECT id_usuario FROM tbl_usuarios WHERE tbl_usuarios.email = email LIMIT 1) IS NOT NULL) THEN
-        RETURN '{"mensaje":"Correo ya en uso","campo":"email","r":3}';
+        RETURN 'Correo ya en uso';
 
     END IF;
 
