@@ -55,12 +55,8 @@ FOR EACH ROW
 BEGIN
     DECLARE tabla VARCHAR(100) DEFAULT 'tbl_predios';
     DECLARE id_registro INT UNSIGNED;
-
     SET id_registro = (OLD.id_predio);
 
-    IF (NEW.id_propietario != OLD.id_propietario) THEN
-        CALL insert_log(tabla,'id_propietario',id_registro,NEW.id_propietario,OLD.id_propietario);
-    END IF;
     IF (NEW.nombre != OLD.nombre) THEN
         CALL insert_log(tabla,'nombre',id_registro,NEW.nombre,OLD.nombre);
     END IF;
@@ -82,6 +78,21 @@ BEGIN
     IF (NEW.direccion != OLD.direccion) THEN
         CALL insert_log(tabla,'direccion',id_registro,NEW.direccion,OLD.direccion);
     END IF;
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
+END//
+
+CREATE TRIGGER after_cambios_predios_propietarios
+AFTER
+UPDATE
+on tbl_predios_propietarios
+FOR EACH ROW
+BEGIN
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_predios_propietarios';
+    DECLARE id_registro INT UNSIGNED;
+    SET id_registro = (OLD.id_propietario);
+
     IF (NEW.fecha_baja != OLD.fecha_baja) THEN
         CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
     END IF;
@@ -151,9 +162,25 @@ BEGIN
 
     SET id_registro = (OLD.id_administrador);
 
-    IF (NEW.id_actividad != OLD.id_actividad) THEN
-        CALL insert_log(tabla,'id_actividad',id_registro,NEW.id_actividad,OLD.id_actividad);
+    IF (NEW.acceso_global_actividades != OLD.acceso_global_actividades) THEN
+        CALL insert_log(tabla,'acceso_global_actividades',id_registro,NEW.fecha_baja,OLD.fecha_baja);
     END IF;
+
+    IF (NEW.fecha_baja != OLD.fecha_baja) THEN
+        CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);
+    END IF;
+END//
+
+CREATE TRIGGER after_cambios_administradores_x_actividad
+AFTER
+UPDATE
+ON tbl_administradores_x_actividad 
+FOR EACH ROW 
+BEGIN
+    DECLARE tabla VARCHAR(100) DEFAULT 'tbl_administradores_x_actividad';
+    DECLARE id_registro INT UNSIGNED;
+
+    SET id_registro = (OLD.id_administrador);
 
     IF (NEW.fecha_baja != OLD.fecha_baja) THEN
         CALL insert_log(tabla,'fecha_baja',id_registro,NEW.fecha_baja,OLD.fecha_baja);

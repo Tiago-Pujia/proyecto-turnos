@@ -53,7 +53,7 @@ CREATE TABLE tbl_roles(
 
 CREATE TABLE tbl_permisos (
     id_permiso INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    permiso VARCHAR(1000) NOT NULL UNIQUE
+    permiso VARCHAR(1000) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_permisos_x_roles(
@@ -90,7 +90,6 @@ CREATE TABLE tbl_usuarios(
 
 CREATE TABLE tbl_predios(
     id_predio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    id_propietario INT UNSIGNED NOT NULL,
     nombre VARCHAR(400) NOT NULL,
     email VARCHAR(200) UNIQUE NOT NULL,
     telefono VARCHAR(100),
@@ -99,11 +98,21 @@ CREATE TABLE tbl_predios(
     localidad VARCHAR(200) NOT NULL,
     direccion VARCHAR(1000) NOT NULL,
     foto_logo MEDIUMBLOB,
-    vistas INT DEFAULT 0,
+    vistas_totales INT DEFAULT 0,
+    vistas_ultimas_24_horas INT DEFAULT 0,
     fecha_baja DATETIME,
-    fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
+    fecha_creacion DATETIME NOT NULL DEFAULT NOW()
+) ENGINE = InnoDB;
 
-    FOREIGN KEY (id_propietario) REFERENCES tbl_usuarios(id_usuario) ON DELETE CASCADE
+CREATE TABLE tbl_predios_propietarios(
+    id_propietario INT UNSIGNED PRIMARY KEY,
+    id_predio INT UNSIGNED NOT NULL,
+    id_usuario INT UNSIGNED NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
+    fecha_baja DATETIME,
+
+    FOREIGN KEY (id_predio) REFERENCES tbl_predios(id_predio) ON DELETE CASCADE,
+    FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_actividades(
@@ -114,7 +123,8 @@ CREATE TABLE tbl_actividades(
     usuarios_maximos_x_turno SMALLINT UNSIGNED NOT NULL,
     descripcion VARCHAR(10000),
     foto_actividad MEDIUMBLOB,
-    vistas INT DEFAULT 0,
+    vistas_totales INT DEFAULT 0,
+    vistas_ultimas_24_horas INT DEFAULT 0,
     fecha_baja DATETIME,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
 
@@ -147,13 +157,22 @@ CREATE TABLE tbl_administradores_x_predio(
     id_administrador INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT UNSIGNED NOT NULL,
     id_predio INT UNSIGNED NOT NULL,
-    id_actividad INT UNSIGNED COMMENT 'Si no se especifica las actividades, tiene acceso a todos aquellas',
+    acceso_global_actividades BIT,
     fecha_baja DATETIME,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
 
     FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario) ON DELETE CASCADE,
-    FOREIGN KEY (id_predio) REFERENCES tbl_predios(id_predio) ON DELETE CASCADE,
-    FOREIGN KEY (id_actividad) REFERENCES tbl_actividades(id_actividad) ON DELETE CASCADE
+    FOREIGN KEY (id_predio) REFERENCES tbl_predios(id_predio) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE tbl_administradores_x_actividad(
+    id_administrador INT UNSIGNED NOT NULL,
+    id_actividad INT UNSIGNED NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
+    fecha_baja DATETIME,
+
+    FOREIGN KEY (id_administrador) REFERENCES tbl_administradores_x_predio(id_administrador),
+    FOREIGN key (id_actividad) REFERENCES tbl_actividades(id_actividad)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tbl_turnos(
@@ -240,20 +259,23 @@ CREATE TABLE tbl_actividades_favoritos_usuarios(
 -- VISTAS
 -- =========================================================================================================
 
-CREATE VIEW vw_tbl_usuarios_activos AS
+CREATE VIEW vw_usuarios_activos AS
 SELECT * FROM tbl_usuarios WHERE fecha_baja IS NULL AND fecha_confirmacion IS NOT NULL;
 
-CREATE VIEW vw_tbl_predios_activos AS
+CREATE VIEW vw_predios_activos AS
 SELECT * FROM tbl_predios WHERE fecha_baja IS NULL;
 
-CREATE VIEW vw_tbl_actividades_activos AS
+CREATE VIEW vw_actividades_activos AS
 SELECT * FROM tbl_actividades WHERE fecha_baja IS NULL;
 
-CREATE VIEW vw_tbl_turnos_activos AS
+CREATE VIEW vw_turnos_activos AS
 SELECT * FROM tbl_turnos WHERE fecha_baja IS NULL;
 
-CREATE VIEW vw_tbl_administradores_x_predio_activos AS
+CREATE VIEW vw_administradores_x_predio_activos AS
 SELECT * FROM tbl_administradores_x_predio WHERE fecha_baja IS NULL;
+
+CREATE VIEW vw_predios_propietarios_activos AS
+SELECT * FROM tbl_predios_propietarios WHERE fecha_baja IS NULL;
 
 -- =========================================================================================================
 -- DATOS DDL
@@ -279,8 +301,9 @@ VALUES
 INSERT INTO 
     tbl_roles (descripcion) 
 VALUES
-    ('Administrador'),
     ('Cliente'),
+    ('Administrador'),
+    ('Propietario'),
     ('Super-Administrador');
 
 INSERT INTO 
@@ -304,38 +327,34 @@ VALUES
     ('Administrar Permiso por Rol'),
     ('Administrar Roles'),
     ('Modificacion de Datos Usuario Propios'),
-    ('Modificacion de Datos Usuarios Ampliados');
+    ('Modificacion de Datos Usuarios Ampliados'),
+    ('Permisos Universales');
 
 INSERT INTO 
     tbl_permisos_x_roles
 VALUES
-    (1,2),
-    (1,4),
-    (1,5),
-    (1,6),
-    (1,7),
-    (1,8),
-    (1,9),
-    (1,10),
-    (1,11),
-    (1,12),
-    (1,14),
+    (1,1),
+    (1,3),
+    (1,15),
+    (1,18),
 
-    (3,2),
-    (3,3),
-    (3,4),
-    (3,5),
-    (3,6),
-    (3,7),
-    (3,8),
+    (2,2),
+    (2,4),
+    (2,5),
+    (2,6),
+    (2,7),
+    (2,8),
+    (2,9),
+    (2,10),
+    (2,11),
+    (2,12),
+    (2,13),
+    (2,14),
+
     (3,9),
     (3,10),
-    (3,11),
-    (3,12),
+    (3,13),
     (3,14),
-    (3,16),
-    (3,17),
 
-    (2,1),
-    (2,3),
-    (2,15);
+    (4,20)
+    ;
