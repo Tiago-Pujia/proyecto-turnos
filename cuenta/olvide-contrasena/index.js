@@ -27,7 +27,7 @@ $("#formLogin").submit(function (el) {
         data: informacion,
         success(respuesta) {
             if (respuesta == 1) {
-                pintar_mensaje("Contraseña cambiada correctamente","#1dd1a1");
+                pintar_mensaje("Contraseña cambiada correctamente, ahora puede volver a intentar <a href='/cuenta/iniciar-sesion/'>Iniciar Sesion</a>","#1dd1a1");
                 return true;
             }
 

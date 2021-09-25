@@ -63,7 +63,39 @@ class CRUD extends BD {
         }
     }
 
+    public function query_sin_connection($query){
+        try {
+            $respuesta = $this->db_connection->query($query)->fetchAll(PDO::FETCH_NUM);
+
+            return $respuesta;
+        } catch (PDOException $e) {
+            return 'Error';
+        }
+    }
+
+    public function store_procedure_sin_connection($query){
+        try {
+            $respuesta = $this->db_connection->query($query);
+
+            return $respuesta;
+        } catch (PDOException $e){
+            return 'Error';
+        }
+    }
+
+    public function exec_sin_connection($exec){
+        try {
+            $respuesta = $this->db_connection->exec($exec);
+            
+            return $respuesta;
+        } catch (PDOException $e) {
+            return 'Error';
+        }
+    }
+
     function __destruct(){}
 }
+
+$crud = new CRUD();
 
 ?>

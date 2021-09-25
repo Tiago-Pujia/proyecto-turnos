@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmar Correo</title>
+    <title>Reactivar Cuenta</title>
 
     <script src="/independencias/jquery.js"></script>
     <script src="/independencias/jquery-jquery-cookie.js"></script>
@@ -23,18 +23,16 @@
     include_once '../../api/funciones.php';
 
     $id_usuario = $_GET['id_usuario'];
-    $token = $_GET['token'];
+    $password = $_GET['token'];
     $token_bd = crear_token($crud->query("SELECT password FROM tbl_usuarios WHERE id_usuario = $id_usuario")[0][0]);
 
-    if($token != $token_bd){
+    if($password != $token_bd){
         exit('Token Erroneo');
     }
 
-    $foto = addslashes(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/img/perfil-predeterminado.png'));
+    $crud->exec("UPDATE tbl_usuarios SET fecha_baja = NULL WHERE id_usuario = $id_usuario");
 
-    $crud->exec("UPDATE tbl_usuarios SET fecha_confirmacion = now(), foto_perfil = '$foto' WHERE id_usuario = $id_usuario");
-
-    echo 'Gracias por Registrarte';
+    echo 'Gracias por volver a estar con nosotros';
     ?>
     </p>
 </body>

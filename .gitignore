@@ -6,4 +6,6 @@
 /api/composer/vendor
 /api/composer/composer.lock
 
+/api/test.php
+
 /RESOLVER.md

@@ -14,8 +14,6 @@ if(!(
 require '../crud.php';
 require '../composer/vendor/autoload.php';
 
-$crud = new CRUD();
-
 function validar_campos($arr_campos){
     $errores_campos = [];
 
@@ -36,32 +34,14 @@ function validar_campos($arr_campos){
     return $errores_campos;
 }
 
-function insertar_usuario($nombre,$apellido,$fecha_nacimiento,$sexo,$email,$password){
-    global $crud;
-    $crud->query("SELECT insertar_usuario('$nombre','$apellido','$fecha_nacimiento',$sexo,'$email','$password')");
-    return 1;
-}
-
-function id_usuario($email){
-    global $crud;
-    $respuesta = $crud->query("SELECT id_usuario FROM tbl_usuarios WHERE email = '$email'");
-    return $respuesta[0][0];
-}
-
-function validar_email($email){
-    global $crud;
-    $respuesta = $crud->query("SELECT validar_email('$email') AS a;");
-    return $respuesta[0][0];
-}
-
 $nombre             = $_GET['nombre'];
 $apellido           = $_GET['apellido'];
-$sexo               = $_GET['sexo'];
+$sexo               = number_format($_GET['sexo']);
 $fecha_nacimiento   = $_GET['fecha_nacimiento'];
 $email              = $_GET['email'];
 $password           = $_GET['password'];
 
-$validar_email = validar_email($email);
+$validar_email = $crud->query("SELECT validar_email('$email') AS a;")[0][0];
 
 $condicionales_campos = [
     ['nombre',strlen($nombre) <= 2,'Nombre Incompleto'],
@@ -84,21 +64,19 @@ if(count($errores_datos) >= 1){
     exit();
 }
 
+include_once '../funciones.php';
+
 $password = password_hash($password,PASSWORD_ARGON2ID);
+$token = crear_token($password);
 
-insertar_usuario($nombre,$apellido,$fecha_nacimiento,$sexo,$email,$password);
-
+$crud->conectar();
+    $crud->query_sin_connection("INSERT INTO tbl_usuarios (nombre,apellido,fecha_nacimiento,sexo,email,password) VALUES ('$nombre','$apellido','$fecha_nacimiento',$sexo,'$email','$password')");
+    $id_usuario = $crud->query_sin_connection("SELECT id_usuario FROM tbl_usuarios WHERE email = '$email'")[0][0];
+$crud->desconectar();
 
 require '../enviar-correo.php';
-
-$email_asunto = 'Gracias por registrarte, por favor verifique su cuenta';
-$email_cuerpo = '
-<h1 style="color:red;">Verificacion de Correo electronico</h1>
-<p>Haga click en el boton</p>
-<p><a href="' . $_SERVER['SERVER_NAME'] . '/cuenta/confirmar-correo/?id_usuario=' . id_usuario($email) . '&token=' . urldecode(substr($password,29)) . '">Verificar</a></p>'
-;
-
-sendMail($email,$email_asunto,$email_cuerpo);
+$activar_cuenta = new Enviar_Correos();
+$activar_cuenta->confirmar_correo($email,$id_usuario,$token);
 
 echo 1;
 
