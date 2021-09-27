@@ -30,9 +30,7 @@
         exit('Token Erroneo');
     }
 
-    $foto = addslashes(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/img/perfil-predeterminado.png'));
-
-    $crud->exec("UPDATE tbl_usuarios SET fecha_confirmacion = now(), foto_perfil = '$foto' WHERE id_usuario = $id_usuario");
+    $crud->exec("UPDATE tbl_usuarios SET fecha_confirmacion = now() WHERE id_usuario = $id_usuario");
 
     echo 'Gracias por Registrarte';
     ?>
