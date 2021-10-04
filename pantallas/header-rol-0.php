@@ -1,4 +1,7 @@
-<?php $ruta = $_SERVER['DOCUMENT_ROOT']; ?>
+<?php 
+$ruta = $_SERVER['DOCUMENT_ROOT']; 
+include_once "$ruta/pantallas/incluir-librerias.php";
+?>
 
 <style>
     <?php include_once "$ruta/pantallas/header-estilos.css"; ?>

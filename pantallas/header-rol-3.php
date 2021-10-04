@@ -2,6 +2,7 @@
 $ruta = $_SERVER['DOCUMENT_ROOT'];
 
 include_once "$ruta/api/crud.php";
+include_once "$ruta/pantallas/incluir-librerias.php";
 
 if(session_status() != 2){
     session_start();

@@ -5,7 +5,7 @@ const pintar_mensaje = (message, color) => {
 
 const check_session = () => {
     $.get(
-        "/api/cuenta/comprobar-sesion-creada.php",
+        "/api/informacion-general/usuario.php?peticion=sesion-creada",
         (response) => {
             pintar_mensaje(
                 Number(response)

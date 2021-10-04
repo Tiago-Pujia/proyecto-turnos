@@ -4,7 +4,9 @@
         exit();
     }
 
-    include_once '../crud.php';
+    $ruta = $_SERVER['DOCUMENT_ROOT'];
+
+    include_once "$ruta/api/crud.php";
 
     $email = $_GET['email'];
     $password = $_GET['password'];
@@ -26,8 +28,8 @@
     }
 
     if(!empty($fecha_baja)) {
-        include_once '../enviar-correo.php';
-        include_once '../funciones.php';
+        include_once "$ruta/api/enviar-correo.php";
+        include_once "$ruta/api/funciones.php";
         
         $token = crear_token($password_bd);
         

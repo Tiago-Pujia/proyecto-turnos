@@ -4,7 +4,7 @@ if(!isset($_GET['categoria']) || !isset($_GET['id'])) {
     exit('Datos Faltantes');
 }
 
-header('Content-Type: png');
+header('Content-Type: image/png');
 
 $categoria = $_GET['categoria'];
 $id = $_GET['id'];

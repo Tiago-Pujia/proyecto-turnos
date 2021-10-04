@@ -4,7 +4,8 @@ if(!isset($_GET['id_usuario']) || !isset($_GET['token']) || !isset($_GET['nuevo_
     exit();
 }
 
-include_once '../crud.php';
+$ruta = $_SERVER['DOCUMENT_ROOT'];
+include_once "$ruta/api/crud.php";
 
 $id_usuario = $_GET['id_usuario'];
 $token = $_GET['token'];

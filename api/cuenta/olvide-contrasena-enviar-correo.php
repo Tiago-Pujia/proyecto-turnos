@@ -4,11 +4,12 @@ if(!isset($_GET['email'])){
     exit();
 }
 
+$ruta = $_SERVER['DOCUMENT_ROOT'];
 $email = $_GET['email'];
 
-include_once '../crud.php';
-include_once '../funciones.php';
-include_once '../enviar-correo.php';
+include_once "$ruta/api/crud.php";
+include_once "$ruta/api/funciones.php";
+include_once "$ruta/api/enviar-correo.php";
 
 if(empty($crud->query("SELECT 1 FROM vw_usuarios_activos WHERE email = '$email'"))){
     exit('Usuario no encontrado');
