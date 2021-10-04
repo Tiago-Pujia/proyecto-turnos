@@ -1,5 +1,7 @@
 <?php
 
+$ruta = $_SERVER['DOCUMENT_ROOT'];
+
 if(!(
     isset($_GET['nombre'])              || 
     isset($_GET['apellido'])            || 
@@ -11,8 +13,8 @@ if(!(
     exit('Campos Faltantes');
 }
 
-require '../crud.php';
-require '../composer/vendor/autoload.php';
+include_once "$ruta/api/crud.php";
+include_once "$ruta/api/composer/vendor/autoload.php";
 
 function validar_campos($arr_campos){
     $errores_campos = [];
@@ -64,7 +66,7 @@ if(count($errores_datos) >= 1){
     exit();
 }
 
-include_once '../funciones.php';
+include_once "$ruta/api/funciones.php";
 
 $password = password_hash($password,PASSWORD_ARGON2ID);
 $token = crear_token($password);
@@ -74,7 +76,7 @@ $crud->conectar();
     $id_usuario = $crud->query_sin_connection("SELECT id_usuario FROM tbl_usuarios WHERE email = '$email'")[0][0];
 $crud->desconectar();
 
-require '../enviar-correo.php';
+include_once "$ruta/api/enviar-correo.php";
 $activar_cuenta = new Enviar_Correos();
 $activar_cuenta->confirmar_correo($email,$id_usuario,$token);
 

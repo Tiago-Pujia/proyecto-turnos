@@ -1,11 +1,13 @@
 <?php
 
+$ruta = $_SERVER['DOCUMENT_ROOT'];
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception; 
 
-include_once 'composer/vendor/phpmailer/phpmailer/src/Exception.php';
-include_once 'composer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-include_once 'composer/vendor/phpmailer/phpmailer/src/SMTP.php';
+include_once '$ruta/api/composer/vendor/phpmailer/phpmailer/src/Exception.php';
+include_once '$ruta/api/composer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+include_once '$ruta/api/composer/vendor/phpmailer/phpmailer/src/SMTP.php';
 
 class Mailer {
     private $username = 'turnoslamatanza@gmail.com';

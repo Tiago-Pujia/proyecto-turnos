@@ -19,8 +19,10 @@
         exit('Datos Faltantes en la URL');
     }
 
-    include_once '../../api/crud.php';
-    include_once '../../api/funciones.php';
+    $ruta = $_SERVER['DOCUMENT_ROOT'];
+
+    include_once "$api/api/crud.php";
+    include_once "$api/api/funciones.php";
 
     $id_usuario = $_GET['id_usuario'];
     $token = $_GET['token'];
