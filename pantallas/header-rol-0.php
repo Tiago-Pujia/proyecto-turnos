@@ -1,5 +1,7 @@
+<?php $ruta = $_SERVER['DOCUMENT_ROOT']; ?>
+
 <style>
-    <?php include_once 'header-estilos.css'; ?>
+    <?php include_once "$ruta/pantallas/header-estilos.css"; ?>
 </style>
 
 <header class="header">
@@ -8,12 +10,12 @@
     </a>
 
     <div class="menu">
-        <?php include '../img/menu.svg'; ?>
+        <?php include "$ruta/img/menu.svg"; ?>
     </div>
 
     <nav class="nav">
         <div class="nav-menu">
-            <?php include '../img/menu-2.svg'; ?>
+            <?php include "$ruta/img/menu-2.svg"; ?>
         </div>
 
         <div class="perfil">
@@ -47,25 +49,5 @@
 </header>
 
 <script>
-    $('.lupa').click(function(){
-        $(this).parents('form').submit()
-    });
-
-    $('.menu, .nav-menu').click(()=>{
-        $('.nav, .pantalla-transparente').slideToggle();
-    });
-
-    $('#cuenta').click(()=>{
-        let nav = $('.nav'),
-            header = $('.header');
-
-        if(nav.css('display') == 'none'){
-            nav.slideDown()
-                .css('display','flex');
-            header.css('border-bottom','none')
-        } else {
-            nav.slideUp();
-            header.css('border-bottom','4px solid #000')
-        }
-    })
+    <?php include_once "$ruta/pantallas/header-script.js"; ?>
 </script>
